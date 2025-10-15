@@ -33,7 +33,7 @@ export default function LoginPage() {
         style={{ width: "380px", borderRadius: "20px" }}
       >
         <h3 className="text-center mb-4 fw-bold text-primary">Welcome Back</h3>
-        <p className="text-center text-muted mb-4">
+        <p className="text-center text-muted mb-3">
           Sign in to access your NeoBank account
         </p>
         <form onSubmit={handleLogin}>

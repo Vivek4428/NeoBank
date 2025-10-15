@@ -35,10 +35,12 @@ const RegisterPage = () => {
     >
       <div
         className="card shadow-lg p-4 border-0"
-        style={{ width: "400px", borderRadius: "20px" }}
+        style={{ width: "450px", borderRadius: "20px" }}
       >
-        <h3 className="text-center mb-4 fw-bold text-primary">Create Account</h3>
-        <p className="text-center text-muted mb-4">
+        <h3 className="text-center mb-4 fw-bold text-primary">
+          Create Account
+        </h3>
+        <p className="text-center text-muted mb-3">
           Join NeoBank and start your smart banking journey
         </p>
         <form onSubmit={handleSubmit}>
