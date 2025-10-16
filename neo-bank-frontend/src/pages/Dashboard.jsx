@@ -1,83 +1,140 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+// import Sidebar from "../components/Sidebar";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
 
+  const data = {
+    balance: "$42,580",
+    income: "$8,430",
+    expense: "$6,120",
+    accounts: 3,
+  };
+
+  const transactions = [
+    {
+      date: "Oct 14, 2025",
+      desc: "Grocery Store",
+      category: "Food",
+      amount: "-$120.50",
+      type: "debit",
+    },
+    {
+      date: "Oct 12, 2025",
+      desc: "Salary Deposit",
+      category: "Income",
+      amount: "+$5,000.00",
+      type: "credit",
+    },
+    {
+      date: "Oct 10, 2025",
+      desc: "Netflix Subscription",
+      category: "Entertainment",
+      amount: "-$15.99",
+      type: "debit",
+    },
+  ];
+
   return (
-    <div className="container-fluid py-4">
-      <div className="row justify-content-center">
-        <div className="col-lg-10 col-12">
-          <div className="p-4 rounded shadow-sm bg-body-tertiary">
-            <h3 className="fw-bold mb-4">
-              Welcome, <span className="text-primary">{user?.username || "User"}</span> 👋
-            </h3>
+    <main
+      className="flex-grow-1 p-4"
+      style={{
+        backgroundColor: "var(--bg-color)",
+        color: "var(--text-color)",
+        minHeight: "100vh",
+        transition: "background 0.3s ease, color 0.3s ease",
+      }}
+    >
+      <div className="container-fluid">
+        <h2 className="fw-bold mb-4">
+          Welcome back 👋,{" "}
+          <span className="text-primary">{user?.username || "User"}</span>
+        </h2>
 
-            <div className="row g-4 mb-5">
-              {[
-                { title: "Account Balance", value: "$12,540.00", color: "text-primary" },
-                { title: "Last Transaction", value: "Apple Store - $299.00", time: "2h ago" },
-                { title: "Active Cards", value: "3", color: "text-success" },
-              ].map((item, i) => (
-                <div className="col-md-4" key={i}>
-                  <h5>{item.title}</h5>
-                  <h4 className={`fw-bold mt-2 ${item.color || ""}`}>{item.value}</h4>
-                  {item.time && <small className="text-muted">{item.time}</small>}
+        <div className="row g-4">
+          {[
+            {
+              title: "Total Balance",
+              value: data.balance,
+              icon: "bi-currency-dollar text-primary",
+            },
+            {
+              title: "Monthly Income",
+              value: data.income,
+              icon: "bi-graph-up text-success",
+            },
+            {
+              title: "Monthly Expense",
+              value: data.expense,
+              icon: "bi-graph-down text-danger",
+            },
+            {
+              title: "Active Accounts",
+              value: data.accounts,
+              icon: "bi-wallet2 text-info",
+            },
+          ].map((item, i) => (
+            <div key={i} className="col-md-6 col-lg-3">
+              <div
+                className="p-4 rounded-4 shadow-sm h-100"
+                style={{
+                  backgroundColor: "var(--card-bg)",
+                  boxShadow: `0 2px 8px var(--shadow-color)`,
+                  transition: "all 0.3s ease",
+                }}
+              >
+                <h6 className="text-uppercase fw-semibold small mb-2">
+                  {item.title}
+                </h6>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="fw-bold mb-0">{item.value}</h4>
+                  <i className={`bi ${item.icon} fs-3`}></i>
                 </div>
-              ))}
+              </div>
             </div>
+          ))}
+        </div>
 
-            <h5 className="fw-bold mb-3">Recent Transactions</h5>
-            <div className="table-responsive shadow-sm rounded bg-white">
-              <table className="table table-hover align-middle mb-0">
-                <thead className="table-light">
-                  <tr>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Status</th>
+        <div className="mt-5">
+          <h4 className="fw-bold mb-3">Recent Transactions</h4>
+          <div
+            className="table-responsive rounded-4 shadow-sm"
+            style={{
+              backgroundColor: "var(--table-bg)",
+              boxShadow: `0 2px 8px var(--shadow-color)`,
+            }}
+          >
+            <table className="table data-bs-theme align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactions.map((t, i) => (
+                  <tr key={i}>
+                    <td>{t.date}</td>
+                    <td>{t.desc}</td>
+                    <td>{t.category}</td>
+                    <td
+                      className={
+                        t.type === "credit" ? "text-success" : "text-danger"
+                      }
+                    >
+                      {t.amount}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {[
-                    {
-                      date: "14 Oct 2025",
-                      desc: "Amazon Purchase",
-                      amount: "- $59.99",
-                      status: "Debited",
-                      badge: "danger",
-                    },
-                    {
-                      date: "13 Oct 2025",
-                      desc: "Salary Credit",
-                      amount: "+ $2000.00",
-                      status: "Credited",
-                      badge: "success",
-                    },
-                    {
-                      date: "12 Oct 2025",
-                      desc: "Netflix Subscription",
-                      amount: "- $15.00",
-                      status: "Debited",
-                      badge: "danger",
-                    },
-                  ].map((tx, i) => (
-                    <tr key={i}>
-                      <td>{tx.date}</td>
-                      <td>{tx.desc}</td>
-                      <td className={`fw-semibold text-${tx.badge}`}>{tx.amount}</td>
-                      <td>
-                        <span className={`badge bg-${tx.badge}`}>{tx.status}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

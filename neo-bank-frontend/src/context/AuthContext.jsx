@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
+    const username = localStorage.getItem("fullName");
     const role = localStorage.getItem("role");
 
     if (token && username) {
