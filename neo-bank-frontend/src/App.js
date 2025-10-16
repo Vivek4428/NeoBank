@@ -24,10 +24,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* Uncomment and create these pages when ready */}
-          {/* <Route path="/transactions" element={<TransactionsPage />} /> */}
-          {/* <Route path="/accounts" element={<AccountsPage />} /> */}
-          {/* <Route path="/settings" element={<SettingsPage />} /> */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>

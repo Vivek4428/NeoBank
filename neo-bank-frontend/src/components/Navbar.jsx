@@ -1,69 +1,96 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
   const { logout } = useContext(AuthContext);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Update theme dynamically
+  useEffect(() => {
+    document.body.className = darkMode
+      ? "bg-dark text-light transition-all"
+      : "bg-light text-dark transition-all";
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
   const toggleMode = () => setDarkMode(!darkMode);
 
+  // Navbar styling classes
   const navbarClass = darkMode
-    ? "navbar-dark bg-secondary"
-    : "navbar-light bg-white shadow-sm";
+    ? "navbar navbar-expand-lg navbar-dark bg-gradient shadow-sm"
+    : "navbar navbar-expand-lg navbar-light bg-white shadow-sm";
+
+  const gradientStyle = {
+    background: darkMode
+      ? "linear-gradient(135deg, #1f1f1f, #2b2b2b)"
+      : "linear-gradient(135deg, #ffffff, #f8f9fa)",
+    transition: "all 0.4s ease",
+  };
 
   return (
-    <div
-      className={`${darkMode ? "bg-dark text-light" : "bg-light text-dark"}`}
-      style={{ transition: "all 0.3s ease" }}
-    >
+    <>
       {/* Top Navbar */}
-      <nav className={`navbar navbar-expand-lg ${navbarClass}`}>
-        <div className="container-fluid px-3">
-          {/* Mobile Sidebar Toggle */}
+      <nav className={navbarClass} style={gradientStyle}>
+        <div className="container-fluid px-3 d-flex justify-content-between align-items-center">
+          {/* Sidebar toggle button for mobile */}
           <button
-            className="btn btn-outline-primary me-3 d-lg-none"
+            className="btn btn-outline-primary d-lg-none"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#sidebarMenu"
             aria-controls="sidebarMenu"
           >
-            <i className="bi bi-list"></i>
+            <i className="bi bi-list fs-5"></i>
           </button>
 
-          <span className="navbar-brand fw-bold text-primary">NeoBank</span>
+          {/* Brand */}
+          <span
+            className={`navbar-brand fw-bold ${
+              darkMode ? "text-info" : "text-primary"
+            }`}
+            style={{ fontSize: "1.4rem", letterSpacing: "0.5px" }}
+          >
+            NeoBank
+          </span>
 
-          <div className="d-flex align-items-center ms-auto gap-2">
+          {/* Mode & Logout Buttons */}
+          <div className="d-flex align-items-center gap-2">
             <button
               className={`btn ${
-                darkMode ? "btn-light" : "btn-dark"
-              } rounded-pill`}
+                darkMode ? "btn-outline-light" : "btn-outline-dark"
+              } rounded-circle d-flex align-items-center justify-content-center`}
+              style={{ width: "40px", height: "40px" }}
               onClick={toggleMode}
+              title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               <i
                 className={`bi ${
-                  darkMode ? "bi-sun-fill" : "bi-moon-stars-fill"
+                  darkMode ? "bi-sun-fill text-warning" : "bi-moon-stars-fill"
                 }`}
-              ></i>{" "}
-              {darkMode ? "Light" : "Dark"}
+                style={{ fontSize: "1.1rem" }}
+              ></i>
             </button>
 
             <button
-              className="btn btn-outline-danger rounded-pill"
+              className="btn btn-outline-danger rounded-pill px-3"
               onClick={async () => {
                 await logout();
                 navigate("/login");
               }}
             >
-              <i className="bi bi-box-arrow-right me-1"></i> Logout
+              <i className="bi bi-box-arrow-right me-2"></i>
+              Logout
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Sidebar Offcanvas for mobile */}
+      {/* Sidebar for navigation (mobile + tablet view) */}
       <div
         className={`offcanvas offcanvas-start ${
           darkMode ? "bg-dark text-light" : "bg-light text-dark"
@@ -72,9 +99,11 @@ const Navbar = () => {
         id="sidebarMenu"
         aria-labelledby="sidebarLabel"
       >
-        <div className="offcanvas-header">
+        <div className="offcanvas-header border-bottom">
           <h5
-            className="offcanvas-title fw-bold text-primary"
+            className={`offcanvas-title fw-bold ${
+              darkMode ? "text-info" : "text-primary"
+            }`}
             id="sidebarLabel"
           >
             NeoBank
@@ -86,54 +115,36 @@ const Navbar = () => {
             aria-label="Close"
           ></button>
         </div>
+
         <div className="offcanvas-body px-3">
           <ul className="nav nav-pills flex-column">
-            <li className="nav-item mb-2">
-              <Link
-                to="/dashboard"
-                className={`nav-link rounded-pill ${
-                  location.pathname === "/dashboard" ? "active" : "text-reset"
-                }`}
-              >
-                <i className="bi bi-speedometer2 me-2"></i> Dashboard
-              </Link>
-            </li>
-            <li className="nav-item mb-2">
-              <Link
-                to="/transactions"
-                className={`nav-link rounded-pill ${
-                  location.pathname === "/transactions"
-                    ? "active"
-                    : "text-reset"
-                }`}
-              >
-                <i className="bi bi-credit-card me-2"></i> Transactions
-              </Link>
-            </li>
-            <li className="nav-item mb-2">
-              <Link
-                to="/accounts"
-                className={`nav-link rounded-pill ${
-                  location.pathname === "/accounts" ? "active" : "text-reset"
-                }`}
-              >
-                <i className="bi bi-wallet2 me-2"></i> Accounts
-              </Link>
-            </li>
-            <li className="nav-item mb-2">
-              <Link
-                to="/settings"
-                className={`nav-link rounded-pill ${
-                  location.pathname === "/settings" ? "active" : "text-reset"
-                }`}
-              >
-                <i className="bi bi-gear me-2"></i> Settings
-              </Link>
-            </li>
+            {[
+              { to: "/dashboard", icon: "bi-speedometer2", label: "Dashboard" },
+              { to: "/transactions", icon: "bi-credit-card", label: "Transactions" },
+              { to: "/accounts", icon: "bi-wallet2", label: "Accounts" },
+              { to: "/settings", icon: "bi-gear", label: "Settings" },
+            ].map(({ to, icon, label }) => (
+              <li className="nav-item mb-2" key={to}>
+                <Link
+                  to={to}
+                  className={`nav-link rounded-pill py-2 px-3 ${
+                    location.pathname === to
+                      ? darkMode
+                        ? "bg-info text-dark fw-semibold"
+                        : "bg-primary text-white fw-semibold"
+                      : "text-reset"
+                  }`}
+                >
+                  <i className={`bi ${icon} me-2`}></i>
+                  {label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 };
+
 export default Navbar;

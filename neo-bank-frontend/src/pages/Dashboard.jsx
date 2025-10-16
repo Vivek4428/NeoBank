@@ -5,78 +5,80 @@ const Dashboard = () => {
   const { user } = useContext(AuthContext);
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-lg-9 col-12">
-          <div className="p-3">
-            <h3 className="fw-bold mb-3">
+    <div className="container-fluid py-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-10 col-12">
+          <div className="p-4 rounded shadow-sm bg-body-tertiary">
+            <h3 className="fw-bold mb-4">
               Welcome, <span className="text-primary">{user?.username || "User"}</span> 👋
             </h3>
 
-            <div className="row g-4">
-              <div className="col-md-4">
-                <h5>Account Balance</h5>
-                <h3 className="fw-bold text-primary mt-2">$12,540.00</h3>
-              </div>
-
-              <div className="col-md-4">
-                <h5>Last Transaction</h5>
-                <p className="mb-1 mt-2">Apple Store - $299.00</p>
-                <small className="text-muted">2 hours ago</small>
-              </div>
-
-              <div className="col-md-4">
-                <h5>Active Cards</h5>
-                <h3 className="fw-bold mt-2">3</h3>
-              </div>
+            <div className="row g-4 mb-5">
+              {[
+                { title: "Account Balance", value: "$12,540.00", color: "text-primary" },
+                { title: "Last Transaction", value: "Apple Store - $299.00", time: "2h ago" },
+                { title: "Active Cards", value: "3", color: "text-success" },
+              ].map((item, i) => (
+                <div className="col-md-4" key={i}>
+                  <h5>{item.title}</h5>
+                  <h4 className={`fw-bold mt-2 ${item.color || ""}`}>{item.value}</h4>
+                  {item.time && <small className="text-muted">{item.time}</small>}
+                </div>
+              ))}
             </div>
 
-            <div className="mt-5">
-              <h5 className="fw-bold mb-3">Recent Transactions</h5>
-              <div className="table-responsive shadow rounded-3 bg-white">
-                <table className="table mb-0 align-middle">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Date</th>
-                      <th>Description</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>14 Oct 2025</td>
-                      <td>Amazon Purchase</td>
-                      <td className="text-danger">- $59.99</td>
+            <h5 className="fw-bold mb-3">Recent Transactions</h5>
+            <div className="table-responsive shadow-sm rounded bg-white">
+              <table className="table table-hover align-middle mb-0">
+                <thead className="table-light">
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    {
+                      date: "14 Oct 2025",
+                      desc: "Amazon Purchase",
+                      amount: "- $59.99",
+                      status: "Debited",
+                      badge: "danger",
+                    },
+                    {
+                      date: "13 Oct 2025",
+                      desc: "Salary Credit",
+                      amount: "+ $2000.00",
+                      status: "Credited",
+                      badge: "success",
+                    },
+                    {
+                      date: "12 Oct 2025",
+                      desc: "Netflix Subscription",
+                      amount: "- $15.00",
+                      status: "Debited",
+                      badge: "danger",
+                    },
+                  ].map((tx, i) => (
+                    <tr key={i}>
+                      <td>{tx.date}</td>
+                      <td>{tx.desc}</td>
+                      <td className={`fw-semibold text-${tx.badge}`}>{tx.amount}</td>
                       <td>
-                        <span className="badge bg-danger">Debited</span>
+                        <span className={`badge bg-${tx.badge}`}>{tx.status}</span>
                       </td>
                     </tr>
-                    <tr>
-                      <td>13 Oct 2025</td>
-                      <td>Salary Credit</td>
-                      <td className="text-success">+ $2000.00</td>
-                      <td>
-                        <span className="badge bg-success">Credited</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>12 Oct 2025</td>
-                      <td>Netflix Subscription</td>
-                      <td className="text-danger">- $15.00</td>
-                      <td>
-                        <span className="badge bg-danger">Debited</span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
-
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
 export default Dashboard;
