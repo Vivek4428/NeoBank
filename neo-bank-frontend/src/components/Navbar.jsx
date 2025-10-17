@@ -1,26 +1,12 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { logout } = useContext(AuthContext);
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
+  const { logout, darkMode, toggleMode } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Update theme dynamically
-  useEffect(() => {
-    document.body.className = darkMode
-      ? "bg-dark text-light transition-all"
-      : "bg-light text-dark transition-all";
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
-  }, [darkMode]);
-
-  const toggleMode = () => setDarkMode(!darkMode);
-
-  // Navbar styling classes
   const navbarClass = darkMode
     ? "navbar navbar-expand-lg navbar-dark bg-gradient shadow-sm"
     : "navbar navbar-expand-lg navbar-light bg-white shadow-sm";
@@ -34,10 +20,8 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Top Navbar */}
       <nav className={navbarClass} style={gradientStyle}>
         <div className="container-fluid px-3 d-flex justify-content-between align-items-center">
-          {/* Sidebar toggle button for mobile */}
           <button
             className="btn btn-outline-primary d-lg-none"
             type="button"
@@ -48,7 +32,6 @@ const Navbar = () => {
             <i className="bi bi-list fs-5"></i>
           </button>
 
-          {/* Brand */}
           <span
             className={`navbar-brand fw-bold ${
               darkMode ? "text-info" : "text-primary"
@@ -58,7 +41,6 @@ const Navbar = () => {
             NeoBank
           </span>
 
-          {/* Mode & Logout Buttons */}
           <div className="d-flex align-items-center gap-2">
             <button
               className={`btn ${
@@ -90,7 +72,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Sidebar for navigation (mobile + tablet view) */}
       <div
         className={`offcanvas offcanvas-start ${
           darkMode ? "bg-dark text-light" : "bg-light text-dark"

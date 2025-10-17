@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-// import Sidebar from "../components/Sidebar";
 
 const Dashboard = () => {
-  const { user } = useContext(AuthContext);
+  const { user, darkMode } = useContext(AuthContext);
 
   const data = {
     balance: "$42,580",
@@ -40,8 +39,8 @@ const Dashboard = () => {
     <main
       className="flex-grow-1 p-4"
       style={{
-        backgroundColor: "var(--bg-color)",
-        color: "var(--text-color)",
+        backgroundColor: darkMode ? "#121212" : "#f8f9fa",
+        color: darkMode ? "#f8f9fa" : "#212529",
         minHeight: "100vh",
         transition: "background 0.3s ease, color 0.3s ease",
       }}
@@ -53,34 +52,34 @@ const Dashboard = () => {
         </h2>
 
         <div className="row g-4">
-          {[
-            {
-              title: "Total Balance",
-              value: data.balance,
-              icon: "bi-currency-dollar text-primary",
-            },
-            {
-              title: "Monthly Income",
-              value: data.income,
-              icon: "bi-graph-up text-success",
-            },
-            {
-              title: "Monthly Expense",
-              value: data.expense,
-              icon: "bi-graph-down text-danger",
-            },
-            {
-              title: "Active Accounts",
-              value: data.accounts,
-              icon: "bi-wallet2 text-info",
-            },
-          ].map((item, i) => (
+          {[{
+            title: "Total Balance",
+            value: data.balance,
+            icon: "bi-currency-dollar text-primary",
+          },
+          {
+            title: "Monthly Income",
+            value: data.income,
+            icon: "bi-graph-up text-success",
+          },
+          {
+            title: "Monthly Expense",
+            value: data.expense,
+            icon: "bi-graph-down text-danger",
+          },
+          {
+            title: "Active Accounts",
+            value: data.accounts,
+            icon: "bi-wallet2 text-info",
+          }].map((item, i) => (
             <div key={i} className="col-md-6 col-lg-3">
               <div
                 className="p-4 rounded-4 shadow-sm h-100"
                 style={{
-                  backgroundColor: "var(--card-bg)",
-                  boxShadow: `0 2px 8px var(--shadow-color)`,
+                  backgroundColor: darkMode ? "#1e1e1e" : "#ffffff",
+                  boxShadow: darkMode
+                    ? "0 2px 8px rgba(255,255,255,0.05)"
+                    : "0 2px 8px rgba(0,0,0,0.1)",
                   transition: "all 0.3s ease",
                 }}
               >
@@ -101,11 +100,19 @@ const Dashboard = () => {
           <div
             className="table-responsive rounded-4 shadow-sm"
             style={{
-              backgroundColor: "var(--table-bg)",
-              boxShadow: `0 2px 8px var(--shadow-color)`,
+              backgroundColor: darkMode ? "#1c1c1c" : "#ffffff",
+              boxShadow: darkMode
+                ? "0 2px 8px rgba(255,255,255,0.05)"
+                : "0 2px 8px rgba(0,0,0,0.1)",
+              color: darkMode ? "#f8f9fa" : "#212529",
+              transition: "all 0.3s ease",
             }}
           >
-            <table className="table data-bs-theme align-middle mb-0">
+            <table
+              className={`table align-middle mb-0 ${
+                darkMode ? "table-dark" : "table-light"
+              }`}
+            >
               <thead>
                 <tr>
                   <th>Date</th>

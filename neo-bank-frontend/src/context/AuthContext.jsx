@@ -4,6 +4,18 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    document.body.className = darkMode
+      ? "bg-dark text-light transition-all"
+      : "bg-light text-dark transition-all";
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  const toggleMode = () => setDarkMode((prev) => !prev);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, darkMode, toggleMode }}>
       {children}
     </AuthContext.Provider>
   );
