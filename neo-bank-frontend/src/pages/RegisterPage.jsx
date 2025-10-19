@@ -19,10 +19,10 @@ const RegisterPage = () => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:8080/api/auth/register", formData);
-      alert("Registration successful! Please log in.");
+      alert("Registration successful!");
       navigate("/login");
     } catch (error) {
-      alert("Registration failed. Please check your details.");
+      alert("Registration failed. Try again.");
     }
   };
 
@@ -30,86 +30,94 @@ const RegisterPage = () => {
     <div
       className="d-flex justify-content-center align-items-center vh-100"
       style={{
-        background: "linear-gradient(135deg, #6610f2, #20c997)",
+        background:
+          "linear-gradient(135deg, #20c997 0%, #6610f2 50%, #17a2b8 100%)",
+        backgroundSize: "200% 200%",
+        animation: "gradientMove 10s ease infinite",
       }}
     >
       <div
-        className="card shadow-lg p-4 border-0"
-        style={{ width: "450px", borderRadius: "20px" }}
+        className="card border-0 p-5 shadow-lg text-center"
+        style={{
+          width: "450px",
+          borderRadius: "25px",
+          backdropFilter: "blur(15px)",
+          background: "rgba(255,255,255,0.12)",
+          color: "#fff",
+        }}
       >
-        <h3 className="text-center mb-4 fw-bold text-primary">
-          Create Account
-        </h3>
-        <p className="text-center text-muted mb-3">
-          Join NeoBank and start your smart banking journey
+        <h2 className="fw-bold mb-3 text-white">
+          Create Account <span>✨</span>
+        </h2>
+        <p className="text-light mb-4">
+          Join <span className="fw-semibold">NeoBank</span> and start your smart
+          banking journey
         </p>
+
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label fw-semibold">Full Name</label>
-            <input
-              type="text"
-              className="form-control rounded-pill"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="John Doe"
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label fw-semibold">Username</label>
-            <input
-              type="text"
-              className="form-control rounded-pill"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="johndoe123"
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label fw-semibold">Email</label>
-            <input
-              type="email"
-              className="form-control rounded-pill"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="example@email.com"
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label fw-semibold">Password</label>
-            <input
-              type="password"
-              className="form-control rounded-pill"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter password"
-              required
-            />
-          </div>
+          {[
+            { name: "fullName", label: "Full Name", placeholder: "John Doe" },
+            { name: "username", label: "Username", placeholder: "johndoe123" },
+            {
+              name: "email",
+              label: "Email",
+              placeholder: "example@email.com",
+              type: "email",
+            },
+            {
+              name: "password",
+              label: "Password",
+              placeholder: "Enter password",
+              type: "password",
+            },
+          ].map(({ name, label, placeholder, type = "text" }) => (
+            <div className="mb-3 text-start" key={name}>
+              <label className="fw-semibold text-light mb-2">{label}</label>
+              <input
+                type={type}
+                className="form-control rounded-pill border-light bg-transparent text-light px-3 py-2"
+                name={name}
+                placeholder={placeholder}
+                value={formData[name]}
+                onChange={handleChange}
+                required
+                onFocus={(e) =>
+                  (e.target.style.boxShadow = "0 0 10px rgba(255,255,255,0.4)")
+                }
+                onBlur={(e) => (e.target.style.boxShadow = "none")}
+              />
+            </div>
+          ))}
+
           <button
-            className="btn btn-primary w-100 rounded-pill py-2 fw-semibold"
+            className="btn btn-light text-primary w-100 rounded-pill fw-semibold py-2 shadow-sm"
             type="submit"
           >
             Register
           </button>
-          <p className="text-center mt-3 mb-0">
-            Already have an account?{" "}
-            <span
-              className="text-primary fw-semibold"
-              role="button"
-              onClick={() => navigate("/login")}
-            >
-              Login
-            </span>
-          </p>
         </form>
+
+        <p className="mt-4 mb-0 text-light">
+          Already have an account?{" "}
+          <span
+            className="fw-semibold text-warning"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </span>
+        </p>
       </div>
+
+      <style>
+        {`
+          @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}
+      </style>
     </div>
   );
 };
