@@ -1,6 +1,7 @@
 package com.example.neobank.services;
 
 import com.example.neobank.dto.RegisterRequest;
+import com.example.neobank.dto.UserDetailsRequest;
 import com.example.neobank.models.User;
 import com.example.neobank.repositories.UserRepository;
 import com.example.neobank.utils.JWTUtils;
@@ -47,4 +48,32 @@ public class UserService {
 
         return user;
     }
+
+    // Update user details after initial registration
+public User updateUserDetails(UserDetailsRequest request) {
+    User user = userRepository.findByUsername(request.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    user.setAccountType(request.getAccountType());
+    user.setInitialDeposit(request.getInitialDeposit());
+    user.setChequebookRequired(request.getChequebookRequired());
+    user.setEmailAlerts(request.getEmailAlerts());
+    user.setSmsAlerts(request.getSmsAlerts());
+    user.setDob(request.getDob());
+    user.setGender(request.getGender());
+    user.setPhone(request.getPhone());
+    user.setCurrentAddress(request.getCurrentAddress());
+    user.setPermanentAddress(request.getPermanentAddress());
+    user.setCity(request.getCity());
+    user.setState(request.getState());
+    user.setPincode(request.getPincode());
+    user.setAadhaarNumber(request.getAadhaarNumber());
+    user.setPanNumber(request.getPanNumber());
+    user.setSecurityQuestion(request.getSecurityQuestion());
+    user.setSecurityAnswer(request.getSecurityAnswer());
+    user.setRegistrationStatus("FULL_COMPLETED");
+
+    return userRepository.save(user);
+}
+
 }

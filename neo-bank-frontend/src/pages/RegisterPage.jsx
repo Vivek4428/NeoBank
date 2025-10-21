@@ -19,8 +19,8 @@ const RegisterPage = () => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:8080/api/auth/register", formData);
-      alert("Registration successful!");
-      navigate("/login");
+      alert("Registration successful! Continue to complete your profile.");
+      navigate("/complete-registration");
     } catch (error) {
       alert("Registration failed. Try again.");
     }

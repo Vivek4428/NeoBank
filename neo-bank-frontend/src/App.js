@@ -9,6 +9,8 @@ import Settings from "./pages/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
+import CompleteRegistrationPage from "./pages/CompleteRegistrationPage";
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/complete-registration" element={<CompleteRegistrationPage />} />
 
           {/* Protected Routes */}
           <Route
