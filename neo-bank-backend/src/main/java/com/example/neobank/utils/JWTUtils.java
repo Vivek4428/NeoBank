@@ -22,6 +22,7 @@ public class JWTUtils {
         this.expirationMs = expirationMs;
     }
 
+    // Primary token generator with role
     public String generateToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
@@ -38,15 +39,23 @@ public class JWTUtils {
                 .compact();
     }
 
+    // Overloaded helper (for cases where only username is passed)
+    public String generateToken(String username) {
+        return generateToken(username, "USER");
+    }
+
+    // Extract username from JWT
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
+    // Extract role from JWT
     public String extractRole(String token) {
         Object role = extractAllClaims(token).get("role");
         return role != null ? role.toString() : null;
     }
 
+    // Extract all claims
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -55,6 +64,7 @@ public class JWTUtils {
                 .getBody();
     }
 
+    // Validate token
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

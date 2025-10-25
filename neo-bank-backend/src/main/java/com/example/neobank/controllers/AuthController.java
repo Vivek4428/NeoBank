@@ -5,6 +5,7 @@ import com.example.neobank.dto.AuthRequest;
 import com.example.neobank.dto.RegisterRequest;
 import com.example.neobank.dto.AuthResponse;
 import com.example.neobank.dto.UserDetailsRequest;
+import com.example.neobank.models.Account;
 import com.example.neobank.models.User;
 import com.example.neobank.services.UserService;
 import com.example.neobank.utils.JWTUtils;
@@ -49,32 +50,10 @@ public class AuthController {
         return "Got accessed a protected route!";
     }
 
-    // Update user details (after registration continuation form)
     @PostMapping("/update-details")
-    public ResponseEntity<User> updateDetails(@RequestBody UserDetailsRequest request) {
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setAccountType(request.getAccountType());
-        user.setInitialDeposit(request.getInitialDeposit());
-        user.setChequebookRequired(request.getChequebookRequired());
-        user.setEmailAlerts(request.getEmailAlerts());
-        user.setSmsAlerts(request.getSmsAlerts());
-        user.setDob(request.getDob());
-        user.setGender(request.getGender());
-        user.setPhone(request.getPhone());
-        user.setCurrentAddress(request.getCurrentAddress());
-        user.setPermanentAddress(request.getPermanentAddress());
-        user.setCity(request.getCity());
-        user.setState(request.getState());
-        user.setPincode(request.getPincode());
-        user.setAadhaarNumber(request.getAadhaarNumber());
-        user.setPanNumber(request.getPanNumber());
-        user.setSecurityQuestion(request.getSecurityQuestion());
-        user.setSecurityAnswer(request.getSecurityAnswer());
-        user.setRegistrationStatus("FULL_COMPLETED");
-
-        userRepository.save(user);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<Account> updateDetails(@RequestBody UserDetailsRequest request) {
+        Account updated = userService.updateUserDetails(request);
+        return ResponseEntity.ok(updated);
     }
+
 }
