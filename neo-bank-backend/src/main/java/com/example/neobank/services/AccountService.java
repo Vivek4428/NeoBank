@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -14,23 +13,36 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    // Create a new account
-    public Account createAccount(Account account) {
-        account.setAccountNumber("AC-" + UUID.randomUUID().toString().substring(0, 10).toUpperCase());
-        account.setBalance(account.getInitialDeposit());
-        return accountRepository.save(account);
-    }
-
-    // Get account by username
-    public Optional<Account> getByUsername(String username) {
+    // Find account by username
+    public Optional<Account> getAccountByUsername(String username) {
         return accountRepository.findByUsername(username);
     }
 
-    // Update balance (deposit or withdraw)
-    public Account updateBalance(String accountNumber, Double newBalance) {
-        Account acc = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-        acc.setBalance(newBalance);
-        return accountRepository.save(acc);
+    // Find account by account number
+    public Optional<Account> getAccountByAccountNumber(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber);
+    }
+
+    // Update account details
+    public Account updateAccount(Account account) {
+        Optional<Account> existing = accountRepository.findByUsername(account.getUsername());
+        if (existing.isEmpty()) {
+            throw new RuntimeException("Account not found for username: " + account.getUsername());
+        }
+
+        Account existingAccount = existing.get();
+        // Preserve immutable fields
+        account.setId(existingAccount.getId());
+        account.setAccountNumber(existingAccount.getAccountNumber());
+        account.setBalance(existingAccount.getBalance());
+
+        return accountRepository.save(account);
+    }
+
+    // Get balance for dashboard display
+    public double getBalanceByUsername(String username) {
+        return accountRepository.findByUsername(username)
+                .map(Account::getBalance)
+                .orElse(0.0);
     }
 }
